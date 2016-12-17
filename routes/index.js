@@ -1,12 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var bodyParser = require('body-parser');
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
 
 //mongo db
 var mongoose = require('mongoose');
@@ -15,6 +8,11 @@ var Comment = mongoose.model('Comment');
 
 
 //router GET
+
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
 
 router.get('/posts', function(req, res, next){
   // req.post.populate('comments', function(err, post) {
@@ -37,6 +35,7 @@ router.get('/posts/:post', function(req, res){
 
 //nieuwe post
 router.post('/posts', function(req, res, next){
+  console.log(req.body);
   var post = new Post(req.body);
 
   post.save(function (err, post){
