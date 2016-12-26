@@ -4,20 +4,16 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-//mongo db
-var mongoose = require('mongoose');
 require('./models/Posts');
 require('./models/Comments');
-mongoose.connect('mongodb://localhost/news');
-
+var mongoose = require('mongoose');
 var index = require('./routes/index');
 var users = require('./routes/users');
-
 var app = express();
 
-app.use('/', index);
-app.use('/users', users);
+//mongo db
+mongoose.connect('mongodb://localhost/news');
+mongoose.Promise = global.Promise;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,9 +23,13 @@ app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// attaching routes
+app.use('/', index);
+app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
